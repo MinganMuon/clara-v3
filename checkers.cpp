@@ -40,24 +40,149 @@ bool applyMove(const Move &move)
 	return true;
 }
 
-MoveList getMoveMoves(int tile)
+MoveList getMoveMoves(const int tile)
 {
+	MoveList ml = {{}};
 
+	// prevent issues with bad indexes
+	if (tile > 40 || tile < 5)
+		return ml;
+	
+	for (int i : std::vector<int>(4,5,-4,5))
+	{
+		if (board[tile+i] == TILE_EMPTY)
+		{
+			if (isTileOnWhiteKingLine(tile+i) && board[tile] == TILE_WHITE) {
+				movelist.push_back(Move(tile,tile+i,std::vector<int>(),true));
+			} else if (isTileOnBlackKingLine(tile+i) && board[tile] == TILE_BLACK) {
+				movelist.push_back(Move(tile,tile+i,std::vector<int>(),true));
+			} else {
+				movelist.push_back(Move(tile,tile+i,std::vector<int>(),false));
+			}
+		}
+	}
+
+	return ml;
 }
 
-MoveList getJumpMoves(int tile)
+MoveList getJumpMoves(const int tile)
 {
-
+	// general idea:
+	// 	iterate over an expanding movelist
+	// 	finding all the jumps that can be made from a specific move's end tile
+	// 	creating new Moves for those new moves
+	// 	appending them to the end of the movelist
+	// 	then deleting the move that generated those new moves if any new moves were found
+	// repeat until the end of the movelist is reached
+	// i.e. until all moves in the movelist have no possible moves that can be made from them
+	
+	MoveList ml = {{}};
+	movelist.push_back(Move(tile,tile,std::vector<int>(),false));
+	auto enditer = std::end(movelist);
+	auto iter = std::begin(movelist);
+	while (iter != enditer)
+	{
+		if (!(*iter).pieceKinged) { // kinging a piece ends the turn
+			bool newjump = false;
+			int tt = (*iter).tileTo;
+			for (int i=4;i<6;i++) {
+				if ((m_theboard[tt] == TILE_WHITE || m_theboard[tt] == TILE_WHITE_KING) && (m_theboard[tt+i] == TILE_BLACK || m_theboard[tt+i] == TILE_BLACK_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
+				{
+					std::vector<int> tj = (*iter).tilesJumped;
+					tj.push_back(tt+i);
+					bool kinged = isTileOnWhiteKingLine(tt+i+i) && m_theboard[tt] == TILE_WHITE;
+					movelist.push_back(Move(tile,tt+i+i,tj,kinged);
+					newjump = true;
+				}
+				if ((m_theboard[tt] == TILE_BLACK_KING) && (m_theboard[tt+i] == TILE_WHITE || m_theboard[tt+i] == TILE_WHITE_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
+				{
+					std::vector<int> tj = (*iter).tilesJumped;
+					tj.push_back(tt+i);
+					movelist.push_back(Move(tile,tt+i+i,tj,false);
+					newjump = true;
+				}
+			}
+			for (int i=-4;i>-6;i--) {
+				if ((m_theboard[tt] == TILE_BLACK || m_theboard[tt] == TILE_BLACK_KING) && (m_theboard[tt+i] == TILE_WHITE || m_theboard[tt+i] == TILE_WHITE_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
+				{
+					std::vector<int> tj = (*iter).tilesJumped;
+					tj.push_back(tt+i);
+					bool kinged = isTileOnBlackKingLine(tt+i+i) && m_theboard[tt] == TILE_BLACK;
+					movelist.push_back(Move(tile,tt+i+i,tj,kinged);
+					newjump = true;
+				}
+				if ((m_theboard[tt] == TILE_WHITE_KING) && (m_theboard[tt+i] == TILE_BLACK || m_theboard[tt+i] == TILE_BLACK_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
+				{
+					std::vector<int> tj = (*iter).tilesJumped;
+					tj.push_back(tt+i);
+					movelist.push_back(Move(tile,tt+i+i,tj,false);
+					newjump = true;
+				}
+			}
+			if (newjump) {
+				iter = movelist.erase(iter);
+			} else {
+				++iter;
+			}
+		} else {
+			++iter;
+		}
+	}
+	// if that works...I'll be quite relieved.
+	
+	// check to see if we found any moves
+	if (!movelist.empty() && (movelist[0].tileTo == tile))
+		return MoveList();
+	
+	return movelist;
 }
 
-MoveList getPieceMoves(int tile)
+MoveList getPieceMoves(const int tile)
 {
+	MoveList ml = {{}};
 
+	MoveList jml = getJumpMoves(tile);
+	if (!jml.empty())
+	{
+		for (Move m : jml)
+			ml.push_back(m);
+	} else {
+		MoveList mml = getMoveMoves(tile);
+		for (Move m : mml)
+			ml.push_back(m);
+	}
+
+	return ml;
 }
 
-MoveList getPlayerMoves(PlayerType player)
+MoveList getPlayerMoves(const PlayerType player)
 {
+	MoveList ml = {{}};
 
+	// a piece can not move without jumping if another piece can jump
+	// remember that getPieceMoves will filter out all non-jump moves if the piece can jump
+	bool jumps = false;
+	for (int tile : m_theboard)
+	{
+		MoveList tml = getPieceMoves(tile);
+		if (jumps)
+		{
+			for (Move m : tml)
+			{
+				if (!m.tilesJumped.empty())
+					ml.push_back(m);
+			}
+		} else {
+			for (Move m : tml)
+			{
+				if (!m.tilesJumped.empty())
+					jumps = true;
+				ml.push_back(m);
+			}
+		}
+	}
+
+	return ml;
 }
 
 int countPiecesOfPlayer(const PlayerType targetPlayerType)

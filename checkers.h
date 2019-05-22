@@ -63,12 +63,12 @@ class Board {
 
 		// functions to generate lists of possible moves
 		private:
-		MoveList getMoveMoves(int tile);
-		MoveList getJumpMoves(int tile);
+		MoveList getMoveMoves(const int tile);
+		MoveList getJumpMoves(const int tile);
 		public:
 		// note: getPieceMoves does not check if other pieces of the same player can jump and restrict the piece in question's ability to move without jumping, but does remove non-jump moves from the list if the piece can jump
-		MoveList getPieceMoves(int tile);
-		MoveList getPlayerMoves(PlayerType player);
+		MoveList getPieceMoves(const int tile);
+		MoveList getPlayerMoves(const PlayerType player);
 
 		// functions relating only to the board
 		int countPiecesOfPlayer(const PlayerType targetPlayerType);
