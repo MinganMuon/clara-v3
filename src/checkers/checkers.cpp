@@ -267,10 +267,10 @@ bool Board::coordsToPadded(const CoordsType coords, int &tile)
 		return false;
 	// do the coords point to a legal tile?
 	if (coords[0] % 2) {
-		if (coords[1] % 2 != 0)
+		if (coords[1] % 2)
 			return false;
 	} else {
-		if (coords[1] % 2)
+		if (coords[1] % 2 == 0)
 			return false;
 	}
 
