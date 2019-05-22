@@ -5,6 +5,20 @@
 // I feel queasy about this using statement...
 using namespace Checkers;
 
+TEST_CASE ("applyMove", "[checkers][checkers-board]") {
+	SECTION ("invalid tile numbers")
+	{
+		Board b = Board(BlackAboveWhiteBoard);
+		REQUIRE_FALSE (b.applyMove(Move(-1,5,std::vector<int>(),false)));
+		REQUIRE_FALSE (b.applyMove(Move(6,-1,std::vector<int>(),false)));
+		REQUIRE_FALSE (b.applyMove(Move(256,5,std::vector<int>(),false)));
+		REQUIRE_FALSE (b.applyMove(Move(7,256,std::vector<int>(),false)));
+		REQUIRE_FALSE (b.applyMove(Move(7,8,std::vector<int>{-1,5},false)));
+		REQUIRE_FALSE (b.applyMove(Move(7,8,std::vector<int>{-1,54},false)));
+		REQUIRE_FALSE (b.applyMove(Move(256,-1,std::vector<int>{-1,54},false)));
+	}
+}
+
 TEST_CASE ("piece count functions", "[checkers][checkers-board]") {
 	// these tests also test countPiecesOfType for if these tests succeed, then that function must be operating properly
 	SECTION ("countPiecesOfPlayer")
