@@ -1,0 +1,4 @@
+# Clara
+
+Plays checkers.
+
