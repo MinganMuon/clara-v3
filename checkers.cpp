@@ -14,7 +14,30 @@ BoardType getBoard()
 
 bool applyMove(const Move &move)
 {
+	// note: does not check if the move is legal or not!
+	// only checks if any of the tile numbers are invalid!
+	
+	std::vector<int> tocheck = move.tilesJumped;
+	tocheck.push_back(move.tileFrom);
+	tocheck.push_back(move.tileTo);
+	for (int t : tocheck)
+		if (t > 45 || t < 0)
+			return false;
 
+	m_theboard[move.tileTo] = m_theboard[move.tileFrom];
+	m_theboard[move.tileFrom] = TILE_EMPTY;
+	for (int t : move.tilesJumped)
+		m_theboard[t] = TILE_EMPTY;
+
+	if (move.pieceKinged)
+	{
+		if (m_theboard[move.tileTo] == TILE_WHITE)
+			m_thebaord[move.tileTo] = TILE_WHITE_KING;
+		if (m_theboard[move.tileTo] == TILE_BLACK)
+			m_thebaord[move.tileTo] = TILE_BLACK_KING;
+	}
+
+	return true;
 }
 
 MoveList getMoveMoves(int tile)
