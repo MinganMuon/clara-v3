@@ -58,6 +58,9 @@ class Board {
 		// get the board
 		BoardType getBoard();
 
+		// set the board
+		void setBoard(BoardType newboard);
+
 		// apply a move, does not check to see if it is legal or not
 		bool applyMove(const Move &move);
 

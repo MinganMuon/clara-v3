@@ -12,6 +12,11 @@ BoardType Board::getBoard()
 	return m_theboard;
 }
 
+void Board::setBoard(BoardType newboard)
+{
+	m_theboard = newboard;
+}
+
 bool Board::applyMove(const Move &move)
 {
 	// note: does not check if the move is legal or not!
