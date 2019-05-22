@@ -77,11 +77,11 @@ class Board {
 		bool hasPlayerWon(PlayerType targetPlayerType);
 
 		// static functions
-		static CoordsType paddedToCoords(int tile);
-		static int coordsToPadded(CoordsType coords);
+		static bool paddedToCoords(const int tile, CoordsType &coords);
+		static bool coordsToPadded(const CoordsType coords, int &tile);
 
-		static bool isTileOnWhiteKingLine(int tile);
-		static bool isTileOnBlackKingLine(int tile);
+		static bool isTileOnWhiteKingLine(const int tile);
+		static bool isTileOnBlackKingLine(const int tile);
 	private:
 		BoardType m_theboard;
 };

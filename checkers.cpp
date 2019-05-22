@@ -52,13 +52,10 @@ bool hasPlayerWon(PlayerType targetPlayerType)
 
 }
 
-// returns {0,0} on error
-static CoordsType paddedToCoords(int tile)
+static bool paddedToCoords(const int tile, CoordsType &coords)
 {
-	CoordsType coords = {0,0};
-	
 	if (tile < 5 || tile > 40 || tile == 36 || tile == 27 || tile == 18 || tile == 9)
-		return coords; // error!
+		return false; 
 
 	// this is ugly but I can't think of a better way...
 	if (tile < 9) {
@@ -87,28 +84,27 @@ static CoordsType paddedToCoords(int tile)
 		coords[0] = (tile - 37)*2 + 1;
 	}
 	
-	return coords;
+	return true;
 }
 
-// returns 0 on error
-static int coordsToPadded(CoordsType coords)
+static bool coordsToPadded(const CoordsType coords, int &tile)
 {
 	// do the coords point to an actual tile on the board?
 	if (coords[0] > 7 || coords[1] > 7)
-		return 0;
+		return false;
 	// do the coords point to a legal tile?
 	if (coords[0] % 2) {
 		if (coords[1] % 2 != 0)
-			return 0;
+			return false;
 	} else {
 		if (coords[1] % 2)
-			return 0;
+			return false;
 	}
 
 	int rows = 7 - coords[1]; // how many rows are we from the bottom?
 	int xoffset = rows % 2;
 
-	int tile = 4; // initial invalid tile offset
+	tile = 4; // initial invalid tile offset
 	tile += 4*rows; // tiles from the full rows
 	if (xoffset) {
 		// invalid tiles between even-to-odd row transitions
@@ -122,10 +118,10 @@ static int coordsToPadded(CoordsType coords)
 		tile += (coords[0])/2 + 1;
 	}
 
-	return tile;
+	return true;
 }
 
-static bool isTileOnWhiteKingLine(int tile)
+static bool isTileOnWhiteKingLine(const int tile)
 {
 	if (tile == 37 || tile == 38 || tile == 39 || tile == 40)
 		return true;
@@ -133,7 +129,7 @@ static bool isTileOnWhiteKingLine(int tile)
 		return false;
 }
 
-static bool isTileOnBlackKingLine(int tile)
+static bool isTileOnBlackKingLine(const int tile)
 {
 	if (tile == 5 || tile == 6 || tile == 7 || tile == 8)
 		return true;
