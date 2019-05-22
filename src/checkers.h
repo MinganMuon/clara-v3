@@ -42,18 +42,18 @@ const BoardType BlackAboveWhiteBoard = {TILE_INVALID, TILE_INVALID, TILE_INVALID
 
 class Move {
 	public:
-		Move(int tileFrom, int tileTo, std::vector<int> tilesJumped, bool pieceKinged=false) : m_tileFrom(tileFrom), m_tileTo(tileTo), m_tilesJumped(tilesJumped), m_pieceKinged(pieceKinged) {};
+		Move(int fromTile, int toTile, std::vector<int> jumpedTiles, bool kingedPiece=false) : tileFrom(fromTile), tileTo(toTile), tilesJumped(jumpedTiles), pieceKinged(kingedPiece) {};
 		int tileFrom;
 		int tileTo;
 		std::vector<int> tilesJumped;
 		bool pieceKinged;
 };
 
-typedef MoveList std::vector<Move>;
+typedef std::vector<Move> MoveList;
 
 class Board {
 	public:
-		Board (BoardType theboard) : m_theboard(theboard);
+		Board (BoardType theboard) : m_theboard(theboard) {};
 
 		// get the board
 		BoardType getBoard();
@@ -92,7 +92,7 @@ enum WinnerType : short {
 
 class CheckersGame {
 	public:
-		CheckersGame(int movesWithoutCaptureLimit=50) : m_moveswithoutcapturelimit(movesWithoutCaptureLimit), m_board(BlackAboveWhiteBoard), m_playertomove(PLAYER_WHITE), m_turnnumber(0), m_moveswithoutcapture(0), m_listofmoves({{}}), m_winner(GAME_IN_PROGRESS) {};
+		CheckersGame(int movesWithoutCaptureLimit=50) : m_board(BlackAboveWhiteBoard), m_playertomove(PLAYER_WHITE), m_turnnumber(0), m_moveswithoutcapture(0), m_moveswithoutcapturelimit(movesWithoutCaptureLimit), m_listofmoves({{}}), m_winstatus(GAME_IN_PROGRESS) {};
 
 		// get data
 		Board getBoard();

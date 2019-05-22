@@ -7,12 +7,12 @@ namespace Checkers {
 // class Board
 // -----------
 
-BoardType getBoard()
+BoardType Board::getBoard()
 {
 	return m_theboard;
 }
 
-bool applyMove(const Move &move)
+bool Board::applyMove(const Move &move)
 {
 	// note: does not check if the move is legal or not!
 	// only checks if any of the tile numbers are invalid!
@@ -32,15 +32,15 @@ bool applyMove(const Move &move)
 	if (move.pieceKinged)
 	{
 		if (m_theboard[move.tileTo] == TILE_WHITE)
-			m_thebaord[move.tileTo] = TILE_WHITE_KING;
+			m_theboard[move.tileTo] = TILE_WHITE_KING;
 		if (m_theboard[move.tileTo] == TILE_BLACK)
-			m_thebaord[move.tileTo] = TILE_BLACK_KING;
+			m_theboard[move.tileTo] = TILE_BLACK_KING;
 	}
 
 	return true;
 }
 
-MoveList getMoveMoves(const int tile)
+MoveList Board::getMoveMoves(const int tile)
 {
 	MoveList ml = {{}};
 
@@ -48,16 +48,16 @@ MoveList getMoveMoves(const int tile)
 	if (tile > 40 || tile < 5)
 		return ml;
 	
-	for (int i : std::vector<int>(4,5,-4,5))
+	for (int i : std::vector<int>{4,5,-4,5})
 	{
-		if (board[tile+i] == TILE_EMPTY)
+		if (m_theboard[tile+i] == TILE_EMPTY)
 		{
-			if (isTileOnWhiteKingLine(tile+i) && board[tile] == TILE_WHITE) {
-				movelist.push_back(Move(tile,tile+i,std::vector<int>(),true));
-			} else if (isTileOnBlackKingLine(tile+i) && board[tile] == TILE_BLACK) {
-				movelist.push_back(Move(tile,tile+i,std::vector<int>(),true));
+			if (isTileOnWhiteKingLine(tile+i) && m_theboard[tile] == TILE_WHITE) {
+				ml.push_back(Move(tile,tile+i,std::vector<int>(),true));
+			} else if (isTileOnBlackKingLine(tile+i) && m_theboard[tile] == TILE_BLACK) {
+				ml.push_back(Move(tile,tile+i,std::vector<int>(),true));
 			} else {
-				movelist.push_back(Move(tile,tile+i,std::vector<int>(),false));
+				ml.push_back(Move(tile,tile+i,std::vector<int>(),false));
 			}
 		}
 	}
@@ -65,7 +65,7 @@ MoveList getMoveMoves(const int tile)
 	return ml;
 }
 
-MoveList getJumpMoves(const int tile)
+MoveList Board::getJumpMoves(const int tile)
 {
 	// general idea:
 	// 	iterate over an expanding movelist
@@ -77,9 +77,9 @@ MoveList getJumpMoves(const int tile)
 	// i.e. until all moves in the movelist have no possible moves that can be made from them
 	
 	MoveList ml = {{}};
-	movelist.push_back(Move(tile,tile,std::vector<int>(),false));
-	auto enditer = std::end(movelist);
-	auto iter = std::begin(movelist);
+	ml.push_back(Move(tile,tile,std::vector<int>(),false));
+	auto enditer = std::end(ml);
+	auto iter = std::begin(ml);
 	while (iter != enditer)
 	{
 		if (!(*iter).pieceKinged) { // kinging a piece ends the turn
@@ -91,14 +91,14 @@ MoveList getJumpMoves(const int tile)
 					std::vector<int> tj = (*iter).tilesJumped;
 					tj.push_back(tt+i);
 					bool kinged = isTileOnWhiteKingLine(tt+i+i) && m_theboard[tt] == TILE_WHITE;
-					movelist.push_back(Move(tile,tt+i+i,tj,kinged);
+					ml.push_back(Move(tile,tt+i+i,tj,kinged));
 					newjump = true;
 				}
 				if ((m_theboard[tt] == TILE_BLACK_KING) && (m_theboard[tt+i] == TILE_WHITE || m_theboard[tt+i] == TILE_WHITE_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
 				{
 					std::vector<int> tj = (*iter).tilesJumped;
 					tj.push_back(tt+i);
-					movelist.push_back(Move(tile,tt+i+i,tj,false);
+					ml.push_back(Move(tile,tt+i+i,tj,false));
 					newjump = true;
 				}
 			}
@@ -108,19 +108,19 @@ MoveList getJumpMoves(const int tile)
 					std::vector<int> tj = (*iter).tilesJumped;
 					tj.push_back(tt+i);
 					bool kinged = isTileOnBlackKingLine(tt+i+i) && m_theboard[tt] == TILE_BLACK;
-					movelist.push_back(Move(tile,tt+i+i,tj,kinged);
+					ml.push_back(Move(tile,tt+i+i,tj,kinged));
 					newjump = true;
 				}
 				if ((m_theboard[tt] == TILE_WHITE_KING) && (m_theboard[tt+i] == TILE_BLACK || m_theboard[tt+i] == TILE_BLACK_KING) && (m_theboard[tt+i+i] == TILE_EMPTY))
 				{
 					std::vector<int> tj = (*iter).tilesJumped;
 					tj.push_back(tt+i);
-					movelist.push_back(Move(tile,tt+i+i,tj,false);
+					ml.push_back(Move(tile,tt+i+i,tj,false));
 					newjump = true;
 				}
 			}
 			if (newjump) {
-				iter = movelist.erase(iter);
+				iter = ml.erase(iter);
 			} else {
 				++iter;
 			}
@@ -131,13 +131,13 @@ MoveList getJumpMoves(const int tile)
 	// if that works...I'll be quite relieved.
 	
 	// check to see if we found any moves
-	if (!movelist.empty() && (movelist[0].tileTo == tile))
+	if (!ml.empty() && (ml[0].tileTo == tile))
 		return MoveList();
 	
-	return movelist;
+	return ml;
 }
 
-MoveList getPieceMoves(const int tile)
+MoveList Board::getPieceMoves(const int tile)
 {
 	MoveList ml = {{}};
 
@@ -155,7 +155,7 @@ MoveList getPieceMoves(const int tile)
 	return ml;
 }
 
-MoveList getPlayerMoves(const PlayerType player)
+MoveList Board::getPlayerMoves(const PlayerType player)
 {
 	MoveList ml = {{}};
 
@@ -185,7 +185,7 @@ MoveList getPlayerMoves(const PlayerType player)
 	return ml;
 }
 
-int countPiecesOfPlayer(const PlayerType targetPlayerType)
+int Board::countPiecesOfPlayer(const PlayerType targetPlayerType)
 {
 	int count = 0;
 	if (targetPlayerType == PLAYER_WHITE) {
@@ -196,7 +196,7 @@ int countPiecesOfPlayer(const PlayerType targetPlayerType)
 	return count;
 }
 
-int countPiecesOfType(const TileType targetTileType)
+int Board::countPiecesOfType(const TileType targetTileType)
 {
 	int count = 0;
 	for (TileType tt : m_theboard) {
@@ -206,7 +206,7 @@ int countPiecesOfType(const TileType targetTileType)
 	return count;
 }
 
-bool hasPlayerWon(const PlayerType targetPlayerType)
+bool Board::hasPlayerWon(const PlayerType targetPlayerType)
 {
 	PlayerType theother = PLAYER_WHITE;
 	if (targetPlayerType == PLAYER_WHITE)
@@ -220,7 +220,7 @@ bool hasPlayerWon(const PlayerType targetPlayerType)
 	return false;
 }
 
-static bool paddedToCoords(const int tile, CoordsType &coords)
+bool Board::paddedToCoords(const int tile, CoordsType &coords)
 {
 	if (tile < 5 || tile > 40 || tile == 36 || tile == 27 || tile == 18 || tile == 9)
 		return false; 
@@ -255,7 +255,7 @@ static bool paddedToCoords(const int tile, CoordsType &coords)
 	return true;
 }
 
-static bool coordsToPadded(const CoordsType coords, int &tile)
+bool Board::coordsToPadded(const CoordsType coords, int &tile)
 {
 	// do the coords point to an actual tile on the board?
 	if (coords[0] > 7 || coords[1] > 7)
@@ -289,7 +289,7 @@ static bool coordsToPadded(const CoordsType coords, int &tile)
 	return true;
 }
 
-static bool isTileOnWhiteKingLine(const int tile)
+bool Board::isTileOnWhiteKingLine(const int tile)
 {
 	if (tile == 37 || tile == 38 || tile == 39 || tile == 40)
 		return true;
@@ -297,7 +297,7 @@ static bool isTileOnWhiteKingLine(const int tile)
 		return false;
 }
 
-static bool isTileOnBlackKingLine(const int tile)
+bool Board::isTileOnBlackKingLine(const int tile)
 {
 	if (tile == 5 || tile == 6 || tile == 7 || tile == 8)
 		return true;
