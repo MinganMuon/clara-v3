@@ -71,10 +71,10 @@ class Board {
 		MoveList getPlayerMoves(PlayerType player);
 
 		// functions relating only to the board
-		int countPiecesOfPlayer(PlayerType targetPlayerType);
-		int countPiecesOfType(TileType targetTileType);
+		int countPiecesOfPlayer(const PlayerType targetPlayerType);
+		int countPiecesOfType(const TileType targetTileType);
 		// checks number of tiles and ability to move
-		bool hasPlayerWon(PlayerType targetPlayerType);
+		bool hasPlayerWon(const PlayerType targetPlayerType);
 
 		// static functions
 		static bool paddedToCoords(const int tile, CoordsType &coords);

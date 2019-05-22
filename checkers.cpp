@@ -37,19 +37,39 @@ MoveList getPlayerMoves(PlayerType player)
 
 }
 
-int countPiecesOfPlayer(PlayerType targetPlayerType)
+int countPiecesOfPlayer(const PlayerType targetPlayerType)
 {
-	
+	int count = 0;
+	if (targetPlayerType == PLAYER_WHITE) {
+		count += countPiecesOfType(TILE_WHITE) + countPiecesOfType(TILE_WHITE_KING);
+	} else {
+		count += countPiecesOfType(TILE_BLACK) + countPiecesOfType(TILE_BLACK_KING);
+	}
+	return count;
 }
 
-int countPiecesOfType(TileType targetTileType)
+int countPiecesOfType(const TileType targetTileType)
 {
-
+	int count = 0;
+	for (TileType tt : m_theboard) {
+		if (tt == targetTileType)
+			count++;
+	}
+	return count;
 }
 
-bool hasPlayerWon(PlayerType targetPlayerType)
+bool hasPlayerWon(const PlayerType targetPlayerType)
 {
+	PlayerType theother = PLAYER_WHITE;
+	if (targetPlayerType == PLAYER_WHITE)
+		theother = PLAYER_BLACK;
 
+	if (countPiecesOfPlayer(theother) == 0)
+		return true;
+	if (getPlayerMoves(theother).empty())
+		return true;
+
+	return false;
 }
 
 static bool paddedToCoords(const int tile, CoordsType &coords)
