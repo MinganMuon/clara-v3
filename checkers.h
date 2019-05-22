@@ -23,7 +23,10 @@ namespace Checkers {
 //  05  06  07  08  
 //
 // This way, incrementing the array by +5/+4/-4/-5 moves to the space up right/up left/down left/down right or a space that isn't on the board if the move is invalid.
+//
+// Also, white is always below black.
 
+// here 0,0 is the top left corner and the first coordinate is the x-value
 typedef std::array<int,2> CoordsType;
 
 enum PlayerType : short {
