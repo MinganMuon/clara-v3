@@ -17,6 +17,35 @@ TEST_CASE ("applyMove", "[checkers][checkers-board]") {
 		REQUIRE_FALSE (b.applyMove(Move(7,8,std::vector<int>{-1,54},false)));
 		REQUIRE_FALSE (b.applyMove(Move(256,-1,std::vector<int>{-1,54},false)));
 	}
+	SECTION ("regular move")
+	{
+		Board b = Board(BlackAboveWhiteBoard);
+		REQUIRE ((b.applyMove(Move(14,19,std::vector<int>(),false)) && b.getBoard()[14] == TILE_EMPTY && b.getBoard()[19] == TILE_WHITE));
+	}
+	SECTION ("jumps")
+	{
+		{
+		Board b = Board(BlackAboveWhiteBoard);
+		b.applyMove(Move(29,19,std::vector<int>(),false));
+		REQUIRE ((b.getBoard()[19] == TILE_BLACK && b.getBoard()[24] == TILE_EMPTY));
+		REQUIRE ((b.applyMove(Move(14,24,std::vector<int>{19},false)) && b.getBoard()[14] == TILE_EMPTY && b.getBoard()[19] == TILE_EMPTY && b.getBoard()[24] == TILE_WHITE));
+		}
+
+		{
+		Board b = Board(BlackAboveWhiteBoard);
+		b.applyMove(Move(29,19,std::vector<int>(),false));
+		b.applyMove(Move(34,29,std::vector<int>(),false));
+		REQUIRE ((b.getBoard()[19] == TILE_BLACK && b.getBoard()[29] == TILE_BLACK && b.getBoard()[24] == TILE_EMPTY && b.getBoard()[34] == TILE_EMPTY));
+		REQUIRE ((b.applyMove(Move(14,34,std::vector<int>{19,29},false)) && b.getBoard()[14] == TILE_EMPTY && b.getBoard()[19] == TILE_EMPTY && b.getBoard()[29] == TILE_EMPTY && b.getBoard()[34] == TILE_WHITE));
+		}
+	}
+	SECTION ("kinged")
+	{
+		Board b = Board(BlackAboveWhiteBoard);
+		REQUIRE ((b.getBoard()[14] == TILE_WHITE && b.getBoard()[29] == TILE_BLACK));
+		REQUIRE ((b.applyMove(Move(14,19,std::vector<int>(),true)) && b.getBoard()[19] == TILE_WHITE_KING));
+		REQUIRE ((b.applyMove(Move(28,24,std::vector<int>(),true)) && b.getBoard()[24] == TILE_BLACK_KING));
+	}
 }
 
 TEST_CASE ("piece count functions", "[checkers][checkers-board]") {
