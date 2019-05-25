@@ -8,16 +8,40 @@ int main()
 {
 	if (initncurses(50,80))
 	{
-		clearscreen();
-		UIBox box1 = UIBox("Test", 1,1, 10,10);
-		box1.draw();
-		UIButton button1 = UIButton("", "Test", 20,20, 10,5);
-		button1.draw();
-		UIButton button2 = UIButton("", "Testing", 15,15, 15,5);
-		button2.selected = true;
-		button2.draw();
-		getch();
+		UIBox mainmenubox = UIBox("Clara", 1,1, 16,16);
+		UIButton playbutton = UIButton("", "Play", 4,3, 10,5);
+		playbutton.selected = true;
+		UIButton quitbutton = UIButton("", "Quit", 4,10, 10,5);
 
+		bool exit = false;
+		while (!exit) {
+			clearscreen();
+			mainmenubox.draw();
+			playbutton.draw();
+			quitbutton.draw();
+
+			int ch = getch();
+
+			switch (ch) {
+				case KEY_UP:
+				case KEY_DOWN:
+					if (playbutton.selected) {
+						playbutton.selected = false;
+						quitbutton.selected = true;
+					} else {
+						playbutton.selected = true;
+						quitbutton.selected = false;
+					}
+					break;
+				case '\n':
+					if (playbutton.selected) {
+						
+					} else {
+						exit = true;
+					}
+					break;
+			}
+		}
 		endncurses();
 	}
 

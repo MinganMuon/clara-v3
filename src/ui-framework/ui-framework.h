@@ -28,9 +28,11 @@ class UIObject {
 
 class UIBox : public UIObject {
 	public:
-		UIBox(std::string thetitle, int thex, int they, int thewidth, int theheight) : UIObject(thex,they,thewidth,theheight), title(thetitle) {};
+		UIBox(std::string thetitle, int thex, int they, int thewidth, int theheight) : UIObject(thex,they,thewidth,theheight), title(thetitle) { selectable = true; selected = false; };
 
 		void draw();
+		void select() {selected = true; };
+		void deselect() {selected = false; };
 
 		std::string title;
 };

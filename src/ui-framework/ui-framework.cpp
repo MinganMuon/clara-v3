@@ -10,6 +10,7 @@ bool initncurses(int minrows, int mincols)
 	keypad(stdscr, TRUE); 
 	noecho();
 	curs_set(FALSE);
+	cbreak();
 
 	if (LINES < minrows || COLS < mincols) {
 		clear();
