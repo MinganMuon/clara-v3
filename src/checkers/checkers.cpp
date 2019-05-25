@@ -310,5 +310,105 @@ bool Board::isTileOnBlackKingLine(const int tile)
 		return false;
 }
 
+// class CheckersGame
+// ------------------
+
+Board CheckersGame::getBoard()
+{
+	return m_board;
+}
+
+PlayerType CheckersGame::whoIsToMove()
+{
+	return m_playertomove;
+}
+
+int CheckersGame::getTurnNumber()
+{
+	return m_turnnumber;
+}
+
+WinnerType CheckersGame::getWinStatus()
+{
+	return m_winstatus;
+}
+
+MoveList CheckersGame::getListOfMoves()
+{
+	return m_listofmoves;
+}
+
+int CheckersGame::getMovesWithoutCapture()
+{
+	return m_moveswithoutcapture;
+}
+
+bool CheckersGame::makeMove(const Move &themove)
+{
+	// valid indexes?
+	std::vector<int> tocheck = themove.tilesJumped;
+	tocheck.push_back(themove.tileFrom);
+	tocheck.push_back(themove.tileTo);
+	for (int t : tocheck)
+		if (t > 45 || t < 0)
+			return false;
+
+	// valid tile type given the current player?
+	//if ((whoIsToMove() == PLAYER_WHITE && (m_board[themove.tileFrom] != TILE_WHITE || m_board[themove.tileFrom] != TILE_WHITE_KING)) || (whoIsToMove() == PLAYER_BLACK && (m_board[themove.tileFrom] != TILE_BLACK || m_board[themove.tileFrom] != TILE_BLACK_KING)))
+	//	return false;
+	// note: I don't think the above is needed becuase checking if the move is legal for the current player would filter out exactly what the above is filtering out
+
+	// is the move legal?
+	MoveList playermoves = m_board.getPlayerMoves(whoIsToMove());
+	bool good = false;
+	for (Move m : playermoves)
+	{
+		if (m.tileTo == themove.tileTo && m.tileFrom == themove.tileFrom && m.tilesJumped == themove.tilesJumped && m.pieceKinged == themove.pieceKinged)
+		{
+			good = true;
+			break;
+		}
+	}
+	if (!good)
+		return false; // the move isn't legal!
+
+	// make the move and update the stats!
+	m_board.applyMove(themove);
+	m_turnnumber++;
+	if (themove.tilesJumped.empty()) {
+		m_moveswithoutcapture++;
+	} else {
+		m_moveswithoutcapture = 0;
+	}
+	if (m_playertomove == PLAYER_WHITE)
+	{
+		m_playertomove = PLAYER_BLACK;
+	} else {
+		m_playertomove = PLAYER_WHITE;
+	}
+	m_listofmoves.push_back(themove);
+	updateWinStatus();
+
+	return true;
+}
+
+void CheckersGame::agreeToADraw()
+{
+	m_winstatus = DRAW;
+}
+
+void CheckersGame::updateWinStatus()
+{
+	if (m_board.hasPlayerWon(PLAYER_WHITE)) {
+		m_winstatus = WHITE_WON;
+	} else if (m_board.hasPlayerWon(PLAYER_BLACK)) {
+		m_winstatus = BLACK_WON;
+	} else if (m_moveswithoutcapture > m_moveswithoutcapturelimit) {
+		m_winstatus = DRAW;
+	} else {
+		m_winstatus = GAME_IN_PROGRESS;
+	}
+}
+
 }
 
