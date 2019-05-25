@@ -40,7 +40,6 @@ class UIButton : public UIBox {
 		UIButton(std::string thetitle, std::string thetext, int thex, int they, int thewidth, int theheight) : UIBox(thetitle,thex,they,thewidth,theheight), text(thetext) { selectable = true; selected = false; marked = false; };
 
 		void draw();
-		void toggleMark() { if (marked) { marked = false; } else { marked = true; } };
 
 		bool marked;
 		std::string text;

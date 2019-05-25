@@ -83,11 +83,11 @@ void doGameSettingsMenu()
 					colorwhitebutton.selected = true;
 					colorbox.selected = false;
 				} else if (colorwhitebutton.selected) {
-					colorwhitebutton.toggleMark();
-					colorblackbutton.toggleMark();
+					colorwhitebutton.marked = true;
+					colorblackbutton.marked = false;
 				} else if (colorblackbutton.selected) {
-					colorblackbutton.toggleMark();
-					colorwhitebutton.toggleMark();
+					colorwhitebutton.marked = false;
+					colorblackbutton.marked = true;
 				} else if (playbutton.selected) {
 					exit = true;
 				}
