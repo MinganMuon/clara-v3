@@ -31,20 +31,18 @@ class UIBox : public UIObject {
 		UIBox(std::string thetitle, int thex, int they, int thewidth, int theheight) : UIObject(thex,they,thewidth,theheight), title(thetitle) { selectable = true; selected = false; };
 
 		void draw();
-		void select() {selected = true; };
-		void deselect() {selected = false; };
 
 		std::string title;
 };
 
 class UIButton : public UIBox {
 	public:
-		UIButton(std::string thetitle, std::string thetext, int thex, int they, int thewidth, int theheight) : UIBox(thetitle,thex,they,thewidth,theheight), text(thetext) { selectable = true; selected = false; };
+		UIButton(std::string thetitle, std::string thetext, int thex, int they, int thewidth, int theheight) : UIBox(thetitle,thex,they,thewidth,theheight), text(thetext) { selectable = true; selected = false; marked = false; };
 
 		void draw();
-		void select() {selected = true; };
-		void deselect() {selected = false; };
+		void toggleMark() { if (marked) { marked = false; } else { marked = true; } };
 
+		bool marked;
 		std::string text;
 };
 

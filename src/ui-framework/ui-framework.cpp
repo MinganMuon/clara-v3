@@ -11,6 +11,7 @@ bool initncurses(int minrows, int mincols)
 	noecho();
 	curs_set(FALSE);
 	cbreak();
+	set_escdelay(0);
 
 	if (LINES < minrows || COLS < mincols) {
 		clear();
@@ -43,6 +44,8 @@ void clearscreen()
 
 void UIBox::draw()
 {
+	if (selected) 
+		attron(A_BOLD);
 	if (width <= 2 || height <= 2)
 		return;
 
@@ -69,15 +72,13 @@ void UIBox::draw()
 		mvaddstr(y+height-1,i,"-");
 	}
 	mvaddstr(y+height-1,x+width-1,"+");
+	if (selected) 
+		attroff(A_BOLD);
 }
 
 void UIButton::draw()
 {
-	if (selected) 
-		attron(A_BOLD);
 	UIBox::draw();
-	if (selected) 
-		attroff(A_BOLD);
 
 	unsigned int inH = height-2;
 	unsigned int inW = width-2;
@@ -104,10 +105,10 @@ void UIButton::draw()
 	} else {
 		startX = startX - (text.length()-1)/2 + 1;
 	}
-	if (selected) 
+	if (selected || marked)
 		attron(A_BOLD);
 	mvaddstr(midY,startX,text.c_str());
-	if (selected) 
+	if (selected || marked) 
 		attroff(A_BOLD);
 }
 
