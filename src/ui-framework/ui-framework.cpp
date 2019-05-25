@@ -123,7 +123,7 @@ void UIMarkableSelector::draw()
 	{
 		if (m_markables[i].length() > width-2)
 		{
-			// should only run once, maybe move this to the constructor?
+			// should only run once per markable so perhaps move this to the constructor?
 			m_markables[i].erase(width-2);
 		}
 		if (i == m_markedmarkable || (i == m_cursorposition && selected)) {
@@ -141,7 +141,7 @@ void UIMarkableSelector::movecursordown()
 	if (m_cursorposition < m_markables.size()-1)
 	{
 		m_cursorposition++;
-		if (m_cursorposition > m_topmostdisplayedmarkable+height-2)
+		if (m_cursorposition > m_topmostdisplayedmarkable+height-2-1)
 			m_topmostdisplayedmarkable++;
 	}
 }
