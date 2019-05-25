@@ -4,6 +4,7 @@
 #define UI_FRAMEWORK_H
 
 #include <string>
+#include <vector>
 #include <ncurses.h>
 #include <curses.h>
 
@@ -43,6 +44,21 @@ class UIButton : public UIBox {
 
 		bool marked;
 		std::string text;
+};
+
+class UIMarkableSelector : public UIBox {
+	public:
+		UIMarkableSelector(std::string thetitle, int thex, int they, int thewidth, int theheight, std::vector<std::string> themarkables) : UIBox(thetitle, thex,they,thewidth,theheight), m_markables(themarkables) { selectable = true; selected = false; m_markedmarkable = 0; m_topmostdisplayedmarkable = 0; m_cursorposition = 0; };
+
+		void draw();
+		void movecursordown();
+		void movecursorup();
+		void markatcursor();
+	private:
+		std::vector<std::string> m_markables;
+		unsigned int m_markedmarkable; // index of marked markable
+		unsigned int m_topmostdisplayedmarkable; // index of topmost displayed markable
+		unsigned int m_cursorposition; // index of cursor
 };
 
 }

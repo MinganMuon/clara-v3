@@ -9,12 +9,14 @@ void doGameSettingsMenu()
 	UIBox gamesettingsbox = UIBox("Game Settings", 1,1, 48,26);
 	UIBox colorbox = UIBox("Your Color", 4,3, 16,16);
 	colorbox.selected = true;
-	UIBox aiselectorbox = UIBox("Opposing AI", 22,3, 24,16);
+	//UIBox aiselectorbox = UIBox("Opposing AI", 22,3, 24,16);
 	UIButton playbutton = UIButton("", "Play!", 4,20, 42,5);
 
 	UIButton colorwhitebutton = UIButton("", "Black", 7,6, 10,5);
 	colorwhitebutton.marked = true;
 	UIButton colorblackbutton = UIButton("", "White", 7,13, 10,5);
+
+	UIMarkableSelector aiselector = UIMarkableSelector("AI Selection", 22,3, 24,16, std::vector<std::string>{"Random","random 2", "this ai is random", "this ai has a very very long name that it is using to test things", "12ply random"});
 
 	bool wascolorboxlast = true;
 	bool exit = false;
@@ -22,10 +24,11 @@ void doGameSettingsMenu()
 		clearscreen();
 		gamesettingsbox.draw();
 		colorbox.draw();
-		aiselectorbox.draw();
+		//aiselectorbox.draw();
 		playbutton.draw();
 		colorwhitebutton.draw();
 		colorblackbutton.draw();
+		aiselector.draw();
 
 		int ch = getch();
 
@@ -36,7 +39,7 @@ void doGameSettingsMenu()
 					if (wascolorboxlast) {
 						colorbox.selected = true;
 					} else {
-						aiselectorbox.selected = true;
+						aiselector.selected = true;
 					}
 				} else if (colorblackbutton.selected) {
 					colorblackbutton.selected = false;
@@ -48,9 +51,9 @@ void doGameSettingsMenu()
 					wascolorboxlast = true;
 					colorbox.selected = false;
 					playbutton.selected = true;
-				} else if (aiselectorbox.selected) {
+				} else if (aiselector.selected) {
 					wascolorboxlast = false;
-					aiselectorbox.selected = false;
+					aiselector.selected = false;
 					playbutton.selected = true;
 				} else if (colorwhitebutton.selected) {
 					colorblackbutton.selected = true;
@@ -60,13 +63,13 @@ void doGameSettingsMenu()
 			case KEY_RIGHT:
 				if (colorbox.selected) {
 					colorbox.selected = false;
-					aiselectorbox.selected = true;
+					aiselector.selected = true;
 				}
 				break;
 			case KEY_LEFT:
-				if (aiselectorbox.selected) {
+				if (aiselector.selected) {
 					colorbox.selected = true;
-					aiselectorbox.selected = false;
+					aiselector.selected = false;
 				}
 				break;
 			case 27: // escape key
