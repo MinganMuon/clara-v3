@@ -59,15 +59,16 @@ void UIBox::draw()
 	mvaddstr(y,x+1,"-");
 	if (uselinedrawing)
 		mvaddch(y,x+1,ACS_HLINE);
-	if (title.length() > width-3)
+	std::string muttitle = title; // this allows mutating the title without affecting the original variable
+	if (muttitle.length() > width-3)
 	{
-		title.erase(width-3);
+		muttitle.erase(width-3);
 	}
-	mvaddstr(y,x+2, title.c_str());
-	mvaddstr(y,x+2+title.length(),std::string(width-3-title.length(),'-').c_str());
+	mvaddstr(y,x+2, muttitle.c_str());
+	mvaddstr(y,x+2+muttitle.length(),std::string(width-3-muttitle.length(),'-').c_str());
 	if (uselinedrawing) {
-		for (unsigned int i=0; i<=width-3-title.length(); i++)
-			mvaddch(y,x+2+title.length()+i,ACS_HLINE);
+		for (unsigned int i=0; i<=width-3-muttitle.length(); i++)
+			mvaddch(y,x+2+muttitle.length()+i,ACS_HLINE);
 	}
 	mvaddstr(y,x+width-1,"+");
 	if (uselinedrawing)
@@ -103,6 +104,9 @@ void UIButton::draw()
 {
 	UIBox::draw();
 
+	// this allows trimming the string without mutating the original text
+	std::string muttext = text;
+
 	unsigned int inH = height-2;
 	unsigned int inW = width-2;
 	unsigned int midY;
@@ -118,19 +122,19 @@ void UIButton::draw()
 	} else {
 		startX = x+(inW-1)/2;
 	}
-	if (text.length() > inW)
+	if (muttext.length() > inW)
 	{
-		text.erase(inW);
+		muttext.erase(inW);
 	}
-	if (text.length() % 2)
+	if (muttext.length() % 2)
 	{
-		startX = startX - text.length()/2 + 1;
+		startX = startX - muttext.length()/2 + 1;
 	} else {
-		startX = startX - (text.length()-1)/2 + 1;
+		startX = startX - (muttext.length()-1)/2 + 1;
 	}
 	if (selected || marked)
 		attron(A_BOLD);
-	mvaddstr(midY,startX,text.c_str());
+	mvaddstr(midY,startX,muttext.c_str());
 	if (selected || marked) 
 		attroff(A_BOLD);
 }
@@ -139,22 +143,24 @@ void UIMarkableSelector::draw()
 {
 	UIBox::draw();
 
+	// this allows trimming the strings without mutating the original markables
+	std::vector<std::string> markables = m_markables;
+
 	unsigned int numtodisplay = height-2;
-	if (numtodisplay > m_markables.size())
-		numtodisplay = m_markables.size();
+	if (numtodisplay > markables.size())
+		numtodisplay = markables.size();
 	for (unsigned int i = m_topmostdisplayedmarkable; i != m_topmostdisplayedmarkable+numtodisplay; i++)
 	{
-		if (m_markables[i].length() > width-2)
+		if (markables[i].length() > width-2)
 		{
-			// should only run once per markable so perhaps move this to the constructor?
-			m_markables[i].erase(width-2);
+			markables[i].erase(width-2);
 		}
 		if (i == m_markedmarkable || (i == m_cursorposition && selected)) {
 		       	attron(A_BOLD);	
-			mvaddstr(y+1+(i-m_topmostdisplayedmarkable),x+1,m_markables[i].c_str());
+			mvaddstr(y+1+(i-m_topmostdisplayedmarkable),x+1,markables[i].c_str());
 			attroff(A_BOLD);
 		} else {
-			mvaddstr(y+1+(i-m_topmostdisplayedmarkable),x+1,m_markables[i].c_str());
+			mvaddstr(y+1+(i-m_topmostdisplayedmarkable),x+1,markables[i].c_str());
 		}
 	}
 }
@@ -187,7 +193,7 @@ void UIMarkableSelector::markatcursor()
 std::string UIMarkableSelector::getmarkedmarkable()
 {
 	if (!m_markables.empty())
-		return m_markables[m_cursorposition]; // BUG: this returns the truncated version of the markable's text! I need to avoid truncating the original m_markables when I trim the values for the UI! todo: fix this
+		return m_markables[m_cursorposition];
 	return std::string();
 }
 
