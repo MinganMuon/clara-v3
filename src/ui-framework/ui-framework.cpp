@@ -44,6 +44,9 @@ void clearscreen()
 
 void UIBox::draw()
 {
+	// for now, I'll put it in a config or something later
+	bool uselinedrawing = false;
+
 	if (selected) 
 		attron(A_BOLD);
 	if (width <= 2 || height <= 2)
@@ -51,27 +54,47 @@ void UIBox::draw()
 
 	// top
 	mvaddstr(y,x,"+");
+	if (uselinedrawing)
+		mvaddch(y,x,ACS_ULCORNER);
 	mvaddstr(y,x+1,"-");
+	if (uselinedrawing)
+		mvaddch(y,x+1,ACS_HLINE);
 	if (title.length() > width-3)
 	{
 		title.erase(width-3);
 	}
 	mvaddstr(y,x+2, title.c_str());
 	mvaddstr(y,x+2+title.length(),std::string(width-3-title.length(),'-').c_str());
+	if (uselinedrawing) {
+		for (unsigned int i=0; i<=width-3-title.length(); i++)
+			mvaddch(y,x+2+title.length()+i,ACS_HLINE);
+	}
 	mvaddstr(y,x+width-1,"+");
+	if (uselinedrawing)
+		mvaddch(y,x+width-1,ACS_URCORNER);
 
 	// sides
 	for (unsigned int i=y+1; i != y+height-1; i++) {
 		mvaddstr(i,x,"|");
+		if (uselinedrawing)
+			mvaddch(i,x,ACS_VLINE);
 		mvaddstr(i,x+width-1,"|");
+		if (uselinedrawing)
+			mvaddch(i,x+width-1,ACS_VLINE);
 	}
 
 	// bottom
 	mvaddstr(y+height-1,x,"+");
+	if (uselinedrawing)
+	mvaddch(y+height-1,x,ACS_LLCORNER);
 	for (unsigned int i=x+1; i != x+width-1; i++) {
-		mvaddstr(y+height-1,i,"-");
+			mvaddstr(y+height-1,i,"-");
+			if (uselinedrawing)
+			mvaddch(y+height-1,i,ACS_HLINE);
 	}
 	mvaddstr(y+height-1,x+width-1,"+");
+	if (uselinedrawing)
+		mvaddch(y+height-1,x+width-1,ACS_LRCORNER);
 	if (selected) 
 		attroff(A_BOLD);
 }
