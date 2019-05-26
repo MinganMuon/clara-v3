@@ -62,6 +62,15 @@ class UIMarkableSelector : public UIBox {
 		unsigned int m_cursorposition; // index of cursor
 };
 
+class UILabel : public UIObject {
+	public:
+		UILabel(std::string thetext, int thex, int they, int thewidth) : UIObject(thex,they,thewidth,1), text(thetext) {};
+
+		void draw();
+
+		std::string text;
+};
+
 }
 
 #endif

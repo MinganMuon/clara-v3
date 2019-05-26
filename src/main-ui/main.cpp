@@ -9,13 +9,17 @@ using namespace Checkers;
 // once I get a more organized AI subsystem going I'll make the aichoice type something better
 void doGameUI(PlayerType playercolor, std::string aichoice)
 {
-	clear();
-	mvaddstr(0,0,aichoice.c_str());
+	clearscreen();
+	UILabel aichoicelabel = UILabel(aichoice,0,0,20);
+	UILabel colorchoicelabel = UILabel("",0,1,10);
+
 	if (playercolor == PLAYER_WHITE) {
-		mvaddstr(1,0,"White");
+		colorchoicelabel.text = "White";
 	} else {
-		mvaddstr(1,0,"Black");
+		colorchoicelabel.text = "Black";
 	}
+	aichoicelabel.draw();
+	colorchoicelabel.draw();
 	getch();
 	return;	
 }

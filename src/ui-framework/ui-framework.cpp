@@ -197,5 +197,18 @@ std::string UIMarkableSelector::getmarkedmarkable()
 	return std::string();
 }
 
+void UILabel::draw()
+{
+	std::string muttext = text;
+
+	if (muttext.length() > width)
+	{
+		muttext.erase(width-3);
+		muttext = muttext + "...";
+	}
+
+	mvaddstr(y,x,muttext.c_str());
+}
+
 }
 
