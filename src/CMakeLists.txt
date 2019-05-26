@@ -8,5 +8,5 @@ target_include_directories(ui-lib PRIVATE ${CURSES_INCLUDE_DIR})
 target_link_libraries(ui-lib PRIVATE ${CURSES_LIBRARIES})
 
 add_executable(clara main-ui/main.cpp)
-target_link_libraries(clara PRIVATE ui-lib)
+target_link_libraries(clara PRIVATE ui-lib checkers-lib)
 

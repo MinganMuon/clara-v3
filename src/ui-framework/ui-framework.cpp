@@ -184,5 +184,12 @@ void UIMarkableSelector::markatcursor()
 	m_markedmarkable = m_cursorposition;
 }
 
+std::string UIMarkableSelector::getmarkedmarkable()
+{
+	if (!m_markables.empty())
+		return m_markables[m_cursorposition]; // BUG: this returns the truncated version of the markable's text! I need to avoid truncating the original m_markables when I trim the values for the UI! todo: fix this
+	return std::string();
+}
+
 }
 

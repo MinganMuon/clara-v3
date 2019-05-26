@@ -54,6 +54,7 @@ class UIMarkableSelector : public UIBox {
 		void movecursordown();
 		void movecursorup();
 		void markatcursor();
+		std::string getmarkedmarkable();
 	private:
 		std::vector<std::string> m_markables;
 		unsigned int m_markedmarkable; // index of marked markable
