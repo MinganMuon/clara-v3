@@ -28,9 +28,9 @@ void doGameSettingsMenu()
 	UIBox aiselectorbox = UIBox("Opposing AI", 22,3, 24,16);
 	UIButton playbutton = UIButton("", "Play!", 4,20, 42,5);
 
-	UIButton colorwhitebutton = UIButton("", "White", 7,6, 10,5);
+	UIButton colorwhitebutton = UIButton("", "White", 7,5, 10,5);
 	colorwhitebutton.marked = true;
-	UIButton colorblackbutton = UIButton("", "Black", 7,13, 10,5);
+	UIButton colorblackbutton = UIButton("", "Black", 7,12, 10,5);
 
 	UIMarkableSelector aiselector = UIMarkableSelector("AI Selection", 23,4, 22,14, std::vector<std::string>{"Random","random 2", "this ai is random", "this ai has a very very long name that it is using to test things", "12ply random", "Random 1", "Random 2", "Random 3", "Random 4", "Random 5", "Random 6", "Random 7", "Random 8", "Random 9", "Random 10", "Random 11", "Random 12", "Random 13"});
 
