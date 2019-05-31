@@ -7,6 +7,6 @@ find_package(Curses REQUIRED)
 target_include_directories(ui-lib PRIVATE ${CURSES_INCLUDE_DIR})
 target_link_libraries(ui-lib PRIVATE ${CURSES_LIBRARIES})
 
-add_executable(clara main-ui/main.cpp)
+add_executable(clara main-ui/main.cpp main-ui/game-ui.h main-ui/game-ui.cpp)
 target_link_libraries(clara PRIVATE ui-lib checkers-lib)
 
